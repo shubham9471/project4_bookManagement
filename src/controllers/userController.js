@@ -123,6 +123,7 @@ const loginUser = async function (req, res) {
         let token = await jwt.sign(payload,
             //exp: Math.floor(Date.now() / 1000) + 10*60*60
             '16th-Dec-Project-Books', { expiresIn: '30mins' })
+           
         res.header('x-api-key', token);
         res.status(200).send({ status: true, message: `User logged in successfully`, data: { token } });
     } catch (error) {

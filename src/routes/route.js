@@ -16,5 +16,13 @@ router.post('/login', userController.loginUser)
 //POST FOR BOOK
 router.post('/books', mid1.mid1,bookController.createBook)
 
+// get Book
+router.get('/books', mid1.mid1,bookController.getBook)
+//update Book
+router.put('/books/:bookId', mid1.mid1,bookController.updateBook)
+
+router.delete('/books/:bookId', mid1.mid1,bookController.deleteById)
+
+
 
 module.exports = router;
