@@ -23,6 +23,20 @@ router.put('/books/:bookId', mid1.mid1,bookController.updateBook)
 
 router.delete('/books/:bookId', mid1.mid1,bookController.deleteById)
 
+//add review
+
+router.post('/books/:bookId/review',bookController.addReview)
+
+//Update review
+router.put('/books/:bookId/review/:reviewId',bookController.updateReview)
+
+//fdlkjf
+router.post('/check/:id',bookController.check)
+
+//grt books with all reviews
+router.post("/books/:bookId",bookController.getBookWithreview)
+
+
 
 
 module.exports = router;
