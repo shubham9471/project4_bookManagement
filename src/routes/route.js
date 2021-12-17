@@ -36,6 +36,9 @@ router.post('/check/:id',bookController.check)
 //grt books with all reviews
 router.post("/books/:bookId",bookController.getBookWithreview)
 
+//delete
+router.delete('/books/:bookId/review/:reviewId',bookController.deleteReview)
+
 
 
 
