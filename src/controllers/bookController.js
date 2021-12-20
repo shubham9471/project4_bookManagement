@@ -203,9 +203,9 @@ const updateBook = async (req, res) => {
 
         }
 
-        else{
-            return res.status(400).send({ status: false, message: 'title is not valid or empty' })
-        }
+        // else{
+        //     return res.status(400).send({ status: false, message: 'title is not valid or empty' })
+        // }
 
         if (excerpt) {
             
@@ -218,9 +218,9 @@ const updateBook = async (req, res) => {
                        
         }
 
-        else{
-            return res.status(400).send({ status: false, message: 'excerpt is not valid or empty' })
-        }
+        // else{
+        //     return res.status(400).send({ status: false, message: 'excerpt is not valid or empty' })
+        // }
 
     
         if (ISBN) {
@@ -232,9 +232,9 @@ const updateBook = async (req, res) => {
             update['ISBN'] = ISBN
         }
 
-        else{
-            return res.status(400).send({ status: false, message: 'ISBN is not valid or empty' })
-        }
+        // else{
+        //     return res.status(400).send({ status: false, message: 'ISBN is not valid or empty' })
+        // }
 
         if (releasedAt) {
 
@@ -249,9 +249,9 @@ const updateBook = async (req, res) => {
 
         }
 
-        else{
-            return res.status(400).send({ status: false, message: 'releasedAt is not valid or empty' })
-        }
+        // else{
+        //     return res.status(400).send({ status: false, message: 'releasedAt is not valid or empty' })
+        // }
 
         
 
@@ -260,7 +260,8 @@ const updateBook = async (req, res) => {
         if (updatedBook) {
             res.status(200).send({ status: true, message: "success", data: updatedBook })
             return
-        } else {
+        } 
+        else {
             res.status(200).send({ status: false, message: "either book is deleted or u are not valid user to update this book" })
         }
 
@@ -297,7 +298,7 @@ const deleteById = async (req, res) => {
         if (deletedBook) {
             return res.status(200).send({ status: true, msg: "book is successfully deleted" })
         } else {
-            return res.status(400).send({ status: false, msg: "either the book is deleted or u are not valid authoe to delet this book" })
+            return res.status(400).send({ status: false, msg: "either the book is deleted or u are not valid author to delete this book" })
 
         }
 
@@ -307,7 +308,6 @@ const deleteById = async (req, res) => {
         res.status(500).send({ status: false, error: err.message })
 
     }
-
 
 }
 
@@ -417,7 +417,7 @@ const updateReview = async (req, res) => {
             }
 
         } else {
-            re.satatus(400).send({ status: false, msg: "no such review exist" })
+            re.status(400).send({ status: false, msg: "no such review exist" })
             return
         }
 
@@ -429,11 +429,11 @@ const updateReview = async (req, res) => {
         let { reviewedBy, rating, review } = req.body
 
         if (!isValid(reviewedBy)) {
-            return res.status(400).send({ status: false, message: 'reviewedAt is not valid value ' })
+            return res.status(400).send({ status: false, message: 'reviewer name  is not valid value ' })
         }
 
         if (!isValid(review)) {
-            return res.status(400).send({ status: false, message: 'reviewedAt is not valid value ' })
+            return res.status(400).send({ status: false, message: 'review is not valid value ' })
         }
 
         if (!([1, 2, 3, 4, 5].includes(Number(rating)))) {
@@ -443,7 +443,7 @@ const updateReview = async (req, res) => {
 
         let book = await bookModel.findOne({ _id: req.params.bookId, isDeleted: false })
 
-        // let review=await bookModel.findOne({_id:req.params.reviewId,isDeleted:false})
+        
 
         if (book) {
 
@@ -504,7 +504,7 @@ const getBookWithreview = async (req, res) => {
             } else {
 
                 
-                res.satatus(200).send({ status: true, data: tempbook })
+                res.status(200).send({ status: true, data: tempbook })
 
             }
         } else {
