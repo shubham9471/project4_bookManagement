@@ -23,16 +23,18 @@ const createUser = async function (req, res) {
     try {
         
         if (!isValidRequestBody(requestBody)) {
-            res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide author details' })
+            res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide user details' })
             return
         }
 
-        const { name, title, email, phone, password } = requestBody
+        let { name, title, email, phone, password } = requestBody
 
         if (!isValid(title)) {
             res.status(400).send({ status: false, message: 'Title is required' })
             return
         }
+        title=title.trim()
+
         if (!isValidTitle(title)) {
             res.status(400).send({ status: false, message: `Title should be among Mr, Mrs, Miss ` })
             return
@@ -47,8 +49,11 @@ const createUser = async function (req, res) {
             return
         }
 
+        phone=phone.trim()
+
         if (!(/^[6-9]\d{9}$/gi.test(phone))) {
             res.status(400).send({ status: false, message: `phone number should be valid number` })
+            return
         }
         const isPhoneAlreadyUsed = await userModel.findOne({ phone });
 
@@ -62,15 +67,8 @@ const createUser = async function (req, res) {
         }
 
         if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
-            res.status(400).send({ status: false, message: `Email should be a valid email address` })
+            res.status(400).send({ status: false, message: `Email should be a valid address` })
             return
-        }
-        if (!isValid(password)) {
-            res.status(400).send({ status: false, message: `Password is required` })
-            return
-        }
-        if (!(/[a-zA-Z0-9@]{8,15}/.test(password))) {
-            res.status(400).send({ status: false, message: `password length should be betwwen 8-15` })
         }
 
         const isEmailAlreadyUsed = await userModel.findOne({ email });
@@ -79,10 +77,25 @@ const createUser = async function (req, res) {
             res.status(400).send({ status: false, message: `${email} email address is already registered` })
             return
         }
+
+        if (!isValid(password)) {
+            res.status(400).send({ status: false, message: `Password is required` })
+            return
+        }
+
+        password=password.trim()
+
+        if (!(password.length<=15 && password.length>=8 )) {
+            res.status(400).send({ status: false, message: `password length should be betwwen 8-15` })
+            return
+        }
+
+        //!(8<=password.length<=15)
        
         let user = await userModel.create(req.body)
-        res.status(201).send({ status: true, data: user })
+        res.status(201).send({ status: true, msg:"success",data: user })
     } catch (error) {
+        console.log(error)
         res.status(500).send({ status: false, msg: error.message })
     }
 }
@@ -107,7 +120,7 @@ const loginUser = async function (req, res) {
             return
         }
         if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
-            res.status(400).send({ status: false, message: `Email should be a valid email address` })
+            res.status(400).send({ status: false, message: `Email should be a valid address` })
             return
         }
         if (!isValid(password)) {
@@ -121,8 +134,8 @@ const loginUser = async function (req, res) {
         }
         let payload = { _id: user._id }
         let token = await jwt.sign(payload,
-            //exp: Math.floor(Date.now() / 1000) + 10*60*60
-            '16th-Dec-Project-Books', { expiresIn: '30mins' })
+            
+            '16th-Dec-Project-Books', { expiresIn: '100hr' })
            
         res.header('x-api-key', token);
         res.status(200).send({ status: true, message: `User logged in successfully`, data: { token } });
@@ -132,13 +145,4 @@ const loginUser = async function (req, res) {
 }
 module.exports.loginUser = loginUser
 module.exports.createUser = createUser
-
-//(jk)//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWJiMGU2MGYxOWQ1YWVhZWUzYTY3NDIiLCJpYXQiOjE2Mzk2NTAzNjMsImV4cCI6MTYzOTY1MjE2M30.baaV0I5D_5ZhV9XzP_Sc2SnZ5ReYLs5Gt_ccovSNqbA
-
-
-
-
-
-
-
 

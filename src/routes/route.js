@@ -30,11 +30,13 @@ router.post('/books/:bookId/review',bookController.addReview)
 //Update review
 router.put('/books/:bookId/review/:reviewId',bookController.updateReview)
 
-//fdlkjf
-router.post('/check/:id',bookController.check)
 
-//grt books with all reviews
-router.post("/books/:bookId",bookController.getBookWithreview)
+
+//get books with all reviews
+router.get("/books/:bookId",bookController.getBookWithreview)
+
+//delete
+router.delete('/books/:bookId/review/:reviewId',bookController.deleteReview)
 
 
 
