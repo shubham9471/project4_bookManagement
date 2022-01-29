@@ -229,6 +229,59 @@ module.exports.getBook = getBook
 
 
 
+const getBookWithreview = async (req, res) => {
+
+    try {
+
+        if (!(isValid(req.params.bookId) && isValidObjectId(req.params.bookId))) {
+            return res.status(400).send({ status: false, msg: "bookId is not valid" })
+        }
+
+        
+        let tempbook = await bookModel.findOne({ _id: req.params.bookId, isDeleted: false })
+
+        if (tempbook) {
+
+            let reviews = await reviewModel.find({ bookId: req.params.bookId })
+            let reviewCount=reviews.length
+            
+            
+            if (reviews.length > 0) {
+
+                tempbook.reviews=reviewCount
+                
+               
+                res.status(200).send({ status: true, data:{
+                    ...tempbook.toObject(), reviewData:reviews 
+                }})
+                return
+            } else {
+
+                
+                res.status(200).send({ status: true, data: tempbook })
+
+            }
+        } else {
+            res.status(400).send({ status: false, msg: "book not exist" })
+            return
+        }
+
+    } catch (err) {
+
+        console.log(err)
+        res.status(500).send({ status: false, error: err.message })
+
+
+    }
+
+}
+
+module.exports.getBookWithreview = getBookWithreview
+
+
+
+
+
 const updateBook = async (req, res) => {
 
     try {
@@ -529,55 +582,6 @@ module.exports.updateReview = updateReview
 
 
 
-
-const getBookWithreview = async (req, res) => {
-
-    try {
-
-        if (!(isValid(req.params.bookId) && isValidObjectId(req.params.bookId))) {
-            return res.status(400).send({ status: false, msg: "bookId is not valid" })
-        }
-
-        
-        let tempbook = await bookModel.findOne({ _id: req.params.bookId, isDeleted: false })
-
-        if (tempbook) {
-
-            let reviews = await reviewModel.find({ bookId: req.params.bookId })
-            let reviewCount=reviews.length
-            
-            
-            if (reviews.length > 0) {
-
-                tempbook.reviews=reviewCount
-                
-               
-                res.status(200).send({ status: true, data:{
-                    ...tempbook.toObject(), reviewData:reviews 
-                }})
-                return
-            } else {
-
-                
-                res.status(200).send({ status: true, data: tempbook })
-
-            }
-        } else {
-            res.status(400).send({ status: false, msg: "book not exist" })
-            return
-        }
-
-    } catch (err) {
-
-        console.log(err)
-        res.status(500).send({ status: false, error: err.message })
-
-
-    }
-
-}
-
-module.exports.getBookWithreview = getBookWithreview
 
 
 const deleteReview= async (req,res)=>{
